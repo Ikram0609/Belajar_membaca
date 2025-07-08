@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Belajar Membaca - Aplikasi Edukasi</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .header h1 {
+            color: #4a5568;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .header p {
+            color: #718096;
+            font-size: 1.2em;
+        }
+
+        .menu-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .menu-btn {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            border: none;
+            padding: 25px;
+            border-radius: 15px;
+            color: white;
+            font-size: 1.3em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .menu-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+        }
+
+        .menu-btn.active {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ffa500 100%);
+        }
+
+        .content-area {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+        }
+
+        .lesson-section {
+            display: none;
+        }
+
+        .lesson-section.active {
+            display: block;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .alphabet-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .letter-card {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            border: none;
+            padding: 20px;
+            border-radius: 15px;
+            font-size: 2em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .letter-card:hover {
+            transform: scale(1.1);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .word-practice {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .word-card {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .word-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .word-card .word {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #2d3748;
+            margin-bottom: 10px;
+        }
+
+        .word-card .syllables {
+            font-size: 1.2em;
+            color: #4a5568;
+            font-style: italic;
+        }
+
+        .quiz-container {
+            background: linear-gradient(135deg, #ffd89b 0%, #19547b 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+
+        .quiz-question {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .quiz-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        .quiz-option {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid transparent;
+            padding: 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .quiz-option:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: white;
+        }
+
+        .score-display {
+            text-align: center;
+            font-size: 1.5em;
+            margin: 20px 0;
+            padding: 15px;
+            background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
+            border-radius: 10px;
+            color: #2d3748;
+            font-weight: bold;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #e2e8f0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .reading-text {
+            font-size: 1.4em;
+            line-height: 2;
+            text-align: justify;
+            background: linear-gradient(135deg, #fff5f5 0%, #fed7f7 100%);
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .highlight {
+            background: #ffd700;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+
+        .control-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .control-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .control-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .menu-buttons {
+                grid-template-columns: 1fr;
+            }
+            
+            .alphabet-grid {
+                grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎓 Belajar Membaca</h1>
+            <p>Aplikasi Edukasi Interaktif untuk Anak-anak</p>
+        </div>
+
+        <div class="menu-buttons">
+            <button class="menu-btn active" onclick="showSection('alphabet')">📝 Belajar Huruf</button>
+            <button class="menu-btn" onclick="showSection('words')">📚 Belajar Kata</button>
+            <button class="menu-btn" onclick="showSection('reading')">📖 Membaca Cerita</button>
+            <button class="menu-btn" onclick="showSection('quiz')">🎯 Kuis Membaca</button>
+            <button class="menu-btn" onclick="showSection('progress')">📊 Progress</button>
+        </div>
+
+        <div class="content-area">
+            <!-- Bagian Belajar Huruf -->
+            <div id="alphabet" class="lesson-section active">
+                <h2>🔤 Belajar Mengenal Huruf</h2>
+                <p>Klik huruf untuk mendengar bunyinya!</p>
+                <div class="alphabet-grid" id="alphabetGrid"></div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="alphabetProgress"></div>
+                </div>
+            </div>
+
+            <!-- Bagian Belajar Kata -->
+            <div id="words" class="lesson-section">
+                <h2>📝 Belajar Membaca Kata</h2>
+                <p>Klik kata untuk mendengar cara membacanya!</p>
+                <div class="word-practice" id="wordPractice"></div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="wordProgress"></div>
+                </div>
+            </div>
+
+            <!-- Bagian Membaca Cerita -->
+            <div id="reading" class="lesson-section">
+                <h2>📚 Membaca Cerita Pendek</h2>
+                <div class="control-buttons">
+                    <button class="control-btn" onclick="prevStory()">⬅️ Sebelumnya</button>
+                    <button class="control-btn" onclick="readAloud()">🔊 Baca Lantang</button>
+                    <button class="control-btn" onclick="nextStory()">➡️ Selanjutnya</button>
+                </div>
+                <div class="reading-text" id="storyText"></div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="readingProgress"></div>
+                </div>
+            </div>
+
+            <!-- Bagian Kuis -->
+            <div id="quiz" class="lesson-section">
+                <h2>🎯 Kuis Membaca</h2>
+                <div class="score-display" id="scoreDisplay">Skor: 0 / 0</div>
+                <div class="quiz-container" id="quizContainer"></div>
+                <div class="control-buttons">
+                    <button class="control-btn" onclick="startQuiz()">🎮 Mulai Kuis</button>
+                    <button class="control-btn" onclick="nextQuestion()">➡️ Soal Berikutnya</button>
+                </div>
+            </div>
+
+            <!-- Bagian Progress -->
+            <div id="progress" class="lesson-section">
+                <h2>📈 Progress Belajar</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="lettersLearned">0</div>
+                        <div class="stat-label">Huruf Dipelajari</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="wordsLearned">0</div>
+                        <div class="stat-label">Kata Dipelajari</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="storiesRead">0</div>
+                        <div class="stat-label">Cerita Dibaca</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="quizScore">0</div>
+                        <div class="stat-label">Skor Kuis Tertinggi</div>
+                    </div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="overallProgress"></div>
+                </div>
+                <p style="text-align: center; margin-top: 15px; font-weight: bold;">Progress Keseluruhan</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data aplikasi
+        let gameData = {
+            lettersLearned: new Set(),
+            wordsLearned: new Set(),
+            storiesRead: 0,
+            currentStory: 0,
+            quizScore: 0,
+            currentQuizScore: 0,
+            currentQuestion: 0
+        };
+
+        // Data huruf alphabet
+        const alphabet = [
+            'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
+            'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
+        ];
+
+        // Data kata-kata untuk latihan
+        const words = [
+            { word: 'MAMA', syllables: 'MA-MA' },
+            { word: 'PAPA', syllables: 'PA-PA' },
+            { word: 'BUKU', syllables: 'BU-KU' },
+            { word: 'RUMAH', syllables: 'RU-MAH' },
+            { word: 'SEKOLAH', syllables: 'SE-KO-LAH' },
+            { word: 'TEMAN', syllables: 'TE-MAN' },
+            { word: 'MAINAN', syllables: 'MAI-NAN' },
+            { word: 'MAKAN', syllables: 'MA-KAN' },
+            { word: 'MINUM', syllables: 'MI-NUM' },
+            { word: 'TIDUR', syllables: 'TI-DUR' }
+        ];
+
+        // Data cerita pendek
+        const stories = [
+            {
+                title: 'Kucing Kecil',
+                text: 'Ada seekor <span class="highlight">kucing kecil</span> yang lucu. Kucing itu suka bermain dengan <span class="highlight">bola yarn</span>. Setiap hari kucing kecil itu berlari-lari di <span class="highlight">taman</span>. Kucing itu sangat <span class="highlight">bahagia</span>.'
+            },
+            {
+                title: 'Bunga di Taman',
+                text: 'Di taman ada banyak <span class="highlight">bunga cantik</span>. Ada bunga <span class="highlight">mawar merah</span>, bunga <span class="highlight">melati putih</span>, dan bunga <span class="highlight">matahari kuning</span>. Semua bunga itu <span class="highlight">harum</span> dan <span class="highlight">indah</span>.'
+            },
+            {
+                title: 'Anak Rajin',
+                text: 'Budi adalah <span class="highlight">anak yang rajin</span>. Setiap pagi dia <span class="highlight">bangun pagi</span>. Budi selalu <span class="highlight">membantu mama</span> di rumah. Dia juga <span class="highlight">rajin belajar</span> setiap hari.'
+            }
+        ];
+
+        // Data soal kuis
+        const quizQuestions = [
+            {
+                question: 'Huruf pertama dalam alphabet adalah?',
+                options: ['A', 'B', 'C', 'D'],
+                correct: 0
+            },
+            {
+                question: 'Kata MAMA terdiri dari berapa suku kata?',
+                options: ['1', '2', '3', '4'],
+                correct: 1
+            },
+            {
+                question: 'Huruf vokal dalam bahasa Indonesia ada berapa?',
+                options: ['3', '4', '5', '6'],
+                correct: 2
+            },
+            {
+                question: 'Kata yang benar untuk menyebut tempat tinggal adalah?',
+                options: ['RUMHA', 'RUMAH', 'RUAMH', 'RUHMA'],
+                correct: 1
+            }
+        ];
+
+        // Inisialisasi aplikasi
+        function init() {
+            createAlphabet();
+            createWordPractice();
+            showStory();
+            updateProgress();
+        }
+
+        // Membuat grid huruf alphabet
+        function createAlphabet() {
+            const grid = document.getElementById('alphabetGrid');
+            grid.innerHTML = '';
+            
+            alphabet.forEach((letter, index) => {
+                const letterCard = document.createElement('button');
+                letterCard.className = 'letter-card';
+                letterCard.textContent = letter;
+                letterCard.onclick = () => learnLetter(letter);
+                grid.appendChild(letterCard);
+            });
+        }
+
+        // Fungsi belajar huruf
+        function learnLetter(letter) {
+            gameData.lettersLearned.add(letter);
+            
+            // Animasi dan suara (simulasi)
+            const card = event.target;
+            card.style.background = 'linear-gradient(135deg, #ff6b6b 0%, #ffa500 100%)';
+            setTimeout(() => {
+                card.style.background = 'linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)';
+            }, 500);
+            
+            // Simulasi text-to-speech
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(letter);
+                utterance.lang = 'id-ID';
+                speechSynthesis.speak(utterance);
+            }
+            
+            updateProgress();
+        }
+
+        // Membuat latihan kata
+        function createWordPractice() {
+            const container = document.getElementById('wordPractice');
+            container.innerHTML = '';
+            
+            words.forEach(wordData => {
+                const wordCard = document.createElement('div');
+                wordCard.className = 'word-card';
+                wordCard.innerHTML = `
+                    <div class="word">${wordData.word}</div>
+                    <div class="syllables">${wordData.syllables}</div>
+                `;
+                wordCard.onclick = () => learnWord(wordData.word);
+                container.appendChild(wordCard);
+            });
+        }
+
+        // Fungsi belajar kata
+        function learnWord(word) {
+            gameData.wordsLearned.add(word);
+            
+            // Animasi
+            const card = event.target.closest('.word-card');
+            card.style.transform = 'scale(1.1)';
+            card.style.background = 'linear-gradient(135deg, #ff6b6b 0%, #ffa500 100%)';
+            
+            setTimeout(() => {
+                card.style.transform = 'scale(1)';
+                card.style.background = 'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)';
+            }, 500);
+            
+            // Simulasi text-to-speech
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(word);
+                utterance.lang = 'id-ID';
+                speechSynthesis.speak(utterance);
+            }
+            
+            updateProgress();
+        }
+
+        // Menampilkan cerita
+        function showStory() {
+            const storyElement = document.getElementById('storyText');
+            const currentStoryData = stories[gameData.currentStory];
+            
+            storyElement.innerHTML = `
+                <h3>${currentStoryData.title}</h3>
+                <p>${currentStoryData.text}</p>
+            `;
+        }
+
+        // Navigasi cerita
+        function prevStory() {
+            if (gameData.currentStory > 0) {
+                gameData.currentStory--;
+                showStory();
+            }
+        }
+
+        function nextStory() {
+            if (gameData.currentStory < stories.length - 1) {
+                gameData.currentStory++;
+                showStory();
+                gameData.storiesRead = Math.max(gameData.storiesRead, gameData.currentStory + 1);
+                updateProgress();
+            }
+        }
+
+        // Baca lantang
+        function readAloud() {
+            const storyText = stories[gameData.currentStory].text.replace(/<[^>]*>/g, '');
+            
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(storyText);
+                utterance.lang = 'id-ID';
+                utterance.rate = 0.8;
+                speechSynthesis.speak(utterance);
+            }
+        }
+
+        // Fungsi kuis
+        function startQuiz() {
+            gameData.currentQuestion = 0;
+            gameData.currentQuizScore = 0;
+            showQuestion();
+        }
+
+        function showQuestion() {
+            if (gameData.currentQuestion >= quizQuestions.length) {
+                endQuiz();
+                return;
+            }
+            
+            const question = quizQuestions[gameData.currentQuestion];
+            const container = document.getElementById('quizContainer');
+            
+            container.innerHTML = `
+                <div class="quiz-question">${question.question}</div>
+                <div class="quiz-options">
+                    ${question.options.map((option, index) => 
+                        `<button class="quiz-option" onclick="selectAnswer(${index})">${option}</button>`
+                    ).join('')}
+                </div>
+            `;
+            
+            updateScore();
+        }
+
+        function selectAnswer(selectedIndex) {
+            const question = quizQuestions[gameData.currentQuestion];
+            const options = document.querySelectorAll('.quiz-option');
+            
+            if (selectedIndex === question.correct) {
+                gameData.currentQuizScore++;
+                options[selectedIndex].style.background = 'rgba(72, 187, 120, 0.8)';
+            } else {
+                options[selectedIndex].style.background = 'rgba(245, 101, 101, 0.8)';
+                options[question.correct].style.background = 'rgba(72, 187, 120, 0.8)';
+            }
+            
+            setTimeout(() => {
+                gameData.currentQuestion++;
+                showQuestion();
+            }, 1500);
+        }
+
+        function nextQuestion() {
+            if (gameData.currentQuestion < quizQuestions.length - 1) {
+                gameData.currentQuestion++;
+                showQuestion();
+            }
+        }
+
+        function endQuiz() {
+            gameData.quizScore = Math.max(gameData.quizScore, gameData.currentQuizScore);
+            const container = document.getElementById('quizContainer');
+            
+            container.innerHTML = `
+                <div class="quiz-question">🎉 Kuis Selesai!</div>
+                <div style="text-align: center; font-size: 1.5em; margin: 20px 0;">
+                    Skor Anda: ${gameData.currentQuizScore} / ${quizQuestions.length}
+                </div>
+                <div style="text-align: center;">
+                    ${gameData.currentQuizScore === quizQuestions.length ? 
+                        '🌟 Sempurna! Anda menguasai semua soal!' : 
+                        '👍 Bagus! Terus berlatih untuk hasil yang lebih baik!'}
+                </div>
+            `;
+            
+            updateProgress();
+        }
+
+        function updateScore() {
+            document.getElementById('scoreDisplay').textContent = 
+                `Skor: ${gameData.currentQuizScore} / ${gameData.currentQuestion + 1}`;
+        }
+
+        // Menampilkan bagian yang dipilih
+        function showSection(sectionName) {
+            // Sembunyikan semua section
+            const sections = document.querySelectorAll('.lesson-section');
+            sections.forEach(section => section.classList.remove('active'));
+            
+            // Hapus class active dari semua tombol menu
+            const buttons = document.querySelectorAll('.menu-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            
+            // Tampilkan section yang dipilih
+            document.getElementById(sectionName).classList.add('active');
+            
+            // Tambahkan class active ke tombol yang diklik
+            event.target.classList.add('active');
+        }
+
+        // Update progress
+        function updateProgress() {
+            // Update progress bars
+            const alphabetProgress = (gameData.lettersLearned.size / alphabet.length) * 100;
+            const wordProgress = (gameData.wordsLearned.size / words.length) * 100;
+            const readingProgress = (gameData.storiesRead / stories.length) * 100;
+            const overallProgress = (alphabetProgress + wordProgress + readingProgress) / 3;
+            
+            document.getElementById('alphabetProgress').style.width = alphabetProgress + '%';
+            document.getElementById('wordProgress').style.width = wordProgress + '%';
+            document.getElementById('readingProgress').style.width = readingProgress + '%';
+            document.getElementById('overallProgress').style.width = overallProgress + '%';
+            
+            // Update statistik
+            document.getElementById('lettersLearned').textContent = gameData.lettersLearned.size;
+            document.getElementById('wordsLearned').textContent = gameData.wordsLearned.size;
+            document.getElementById('storiesRead').textContent = gameData.storiesRead;
+            document.getElementById('quizScore').textContent = gameData.quizScore;
+        }
+
+        // Inisialisasi saat halaman dimuat
+        window.onload = init;
+    </script>
+</body>
+</html>
